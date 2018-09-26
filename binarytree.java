@@ -1,39 +1,95 @@
- class binary
-{
-	public static String[] tree;
+class BNode {
+	private int iData;
+	private BNode left;
+	private BNode right;
 	
-	public static void main(String[] args)
-	{
-		int rowSize = 64;
-		int numRows = (int)(Math.log(rowSize)/Math.log(2)) + 1;
-		tree = new String[numRows];
-		for(int i = 0; i < tree.length; i++)
-			 tree[i] = "";
-			makeBranches(0, rowSize-1, 0);
-		display(tree);
+	BNode(int x) {
+		iData = x;
+		left = null;
+		right = null;
 	}
 	
-	public static void makeBranches(int left, int right, int row)
-	{
-		if(left - right == 0) return;
-		int midpt = (left + right)/2;
-		for(int i = left; i < right; i++)
-		{
-			if(i == midpt) tree[row] += " X";
-			else tree[row] += "-";
-		}
-		
-		makeBranches(left, midpt, row+1);
-		
-		makeBranches(midpt+1, right, row+1);
-		
+	void setIData(int iData) {
+		this.iData = iData;
 	}
 	
-	public static void display(String[] tree)
-	{
-		for(int i = 0; i < tree.length; i++)
-		{
-			System.out.println(tree[i]);
+	void setLeft(BNode left) {
+		this.left = left;
+	}
+	
+	void setRight(BNode right) {
+		this.right = right;
+	}
+	
+	int getIData() {
+		return iData;
+	}
+	
+	BNode getLeft() {
+		return left;
+	}
+	
+	BNode getRight() {
+		return right;
+	}
+}
+
+class BTree {
+	private BNode root;
+	
+	BTree() {
+		root = null;
+	}
+	
+	boolean isEmpty() {
+		return root == null;
+	}
+	
+	BTree insert(int iData) {
+		BNode node = new BNode(iData);
+		
+		if (isEmpty()) {
+			root = node;
+		} else {
+			BNode temp = root;
+			BNode t = root;
+			
+			while (temp != null) {
+				if (node.getIData() > temp.getIData()) {
+					t = temp;
+					temp = temp.getRight();
+				} else if (node.getIData() < temp.getIData()) {
+					t = temp;
+					temp = temp.getLeft();
+				} else {
+					return this;
+				}
+			}
+			if (t.getIData() > node.getIData()) {
+				t.setLeft(node);
+			} else {
+				t.setRight(node);
+			}
 		}
+		return this;
+	}
+	
+	void display() {
+		display(root);
+	}
+	
+	private void display(BNode root) {
+		if (root != null) {
+			display(root.getLeft());
+			System.out.println(root.getIData());
+			display(root.getRight());
+		}
+	}
+}
+
+public class binarytree {
+	public static void main(String[] args) {
+		BTree tree = new BTree();
+		tree.insert(50).insert(30).insert(40).insert(10).insert(20).insert(60).insert(70).insert(80).insert(90).display();
 	}
 }
